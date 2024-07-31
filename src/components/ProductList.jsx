@@ -38,7 +38,7 @@ const ProductList = () => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center p-5 bg-gray-100 min-h-screen'>
+    <div className='flex flex-col justify-center items-center p-5 bg-gray-200 min-h-screen'>
       <div className="text-right">
         {basket.length >= 0 && (
           <div onClick={() => setBasketInfo(!basketInfo)} className="fixed cursor-pointer top-5 right-5 p-3 bg-white border border-gray-300 rounded-full shadow-md flex items-center justify-center space-x-2">
