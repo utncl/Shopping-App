@@ -75,30 +75,36 @@ const ProductList = () => {
         <button className='bg-red-400 p-2 rounded-md text-white' onClick={clearSearchTerm}>Clear Search</button>
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6'>
-        {(searchTerm ? searchResults : products).map(product => (
-          <div className='bg-white border border-gray-300 px-4 py-6 rounded-md flex flex-col justify-between shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer' key={product.id}>
-            <div className='flex justify-between items-center'>
-              <button 
-                className={`font-bold border p-3 items-center justify-center flex rounded-full hover:shadow-md ${basket.some(item => item.id === product.id) ? 'bg-yellow-400 font-bold text-xl' : 'text-red-400 font-bold text-xl'}`} 
-                onClick={() => handleBasketClick(product.id)}
-              >
-                <SlBasket />
-              </button>
-              <div className="flex">
-                {renderStars(product.rating)}
+        {searchTerm && searchResults.length === 0 ? (
+          <div className='col-span-full text-center text-gray-500'>
+            No products found
+          </div>
+        ) : (
+          (searchTerm ? searchResults : products).map(product => (
+            <div className='bg-white border border-gray-300 px-4 py-6 rounded-md flex flex-col justify-between shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer' key={product.id}>
+              <div className='flex justify-between items-center'>
+                <button 
+                  className={`font-bold border p-3 items-center justify-center flex rounded-full hover:shadow-md ${basket.some(item => item.id === product.id) ? 'bg-yellow-400 font-bold text-xl' : 'text-red-400 font-bold text-xl'}`} 
+                  onClick={() => handleBasketClick(product.id)}
+                >
+                  <SlBasket />
+                </button>
+                <div className="flex">
+                  {renderStars(product.rating)}
+                </div>
+              </div>
+              <img className='w-full h-48 object-cover mb-4 rounded-md' src={product.images[0]} alt={product.title} />
+              <h1 className='font-bold text-center text-lg mb-2'>{product.title}</h1>
+              <div className="text-sm mb-4">{product.description}</div>
+              <div className="flex flex-col gap-2 text-left w-full">
+                <div className=""><b>Price: </b>{product.price}$</div>
+                <div className=""><b>Brand: </b>{product.brand}</div>
+                <div className=""><b>Category: </b>{product.category}</div>
+                <div className=""><b>Stock:</b> {product.stock}</div>
               </div>
             </div>
-            <img className='w-full h-48 object-cover mb-4 rounded-md' src={product.images[0]} alt={product.title} />
-            <h1 className='font-bold text-center text-lg mb-2'>{product.title}</h1>
-            <div className="text-sm mb-4">{product.description}</div>
-            <div className="flex flex-col gap-2 text-left w-full">
-              <div className=""><b>Price: </b>{product.price}$</div>
-              <div className=""><b>Brand: </b>{product.brand}</div>
-              <div className=""><b>Category: </b>{product.category}</div>
-              <div className=""><b>Stock:</b> {product.stock}</div>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
