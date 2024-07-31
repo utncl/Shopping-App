@@ -8,6 +8,17 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [basket, setBasket] = useState([]);
   const [basketInfo, setBasketInfo] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      axios.get(`${apiUrl}/search?q=${searchTerm}`)
+        .then((response) => setSearchResults(response.data.products))
+        .catch((error) => console.error("Error fetching data:", error));
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL;
@@ -37,6 +48,10 @@ const ProductList = () => {
     }
   };
 
+  const clearSearchTerm = () => {
+    setSearchTerm("");
+  }
+
   return (
     <div className='flex flex-col justify-center items-center p-5 bg-gray-200 min-h-screen'>
       <div className="text-right">
@@ -49,8 +64,18 @@ const ProductList = () => {
         {basketInfo && <Basket basket={basket} setBasket={setBasket} setBasketInfo={setBasketInfo} />}
       </div>
       <h1 className='text-red-500 font-extrabold text-3xl mb-5'>Product List</h1>
+      <div className="flex items-center justify-center mb-4 gap-x-3 w-full">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search for products"
+          className="p-2 border rounded w-[50%]"
+        />
+        <button className='bg-red-400 p-2 rounded-md text-white' onClick={clearSearchTerm}>Clear Search</button>
+      </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6'>
-        {products.map(product => (
+        {(searchTerm ? searchResults : products).map(product => (
           <div className='bg-white border border-gray-300 px-4 py-6 rounded-md flex flex-col justify-between shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer' key={product.id}>
             <div className='flex justify-between items-center'>
               <button 
@@ -71,13 +96,6 @@ const ProductList = () => {
               <div className=""><b>Brand: </b>{product.brand}</div>
               <div className=""><b>Category: </b>{product.category}</div>
               <div className=""><b>Stock:</b> {product.stock}</div>
-            </div>
-            <div className="flex flex-wrap gap-2 mt-3">
-              {product.tags.map((tag, index) => (
-                <div key={index} className="border border-gray-300 bg-gray-100 p-1 rounded-md text-sm">
-                  #{tag}
-                </div>
-              ))}
             </div>
           </div>
         ))}
